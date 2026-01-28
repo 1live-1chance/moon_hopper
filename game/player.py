@@ -12,25 +12,28 @@ class Player(arcade.Sprite):
         self.center_x = 100
         self.center_y = 100
         self.change_y = 0
+        self.change_x = 0
         self.jump_sound = arcade.load_sound(":resources:/sounds/jump1.wav")
         self.is_on_ground = False
         
     def update(self) -> None:
-        """Применение лунной гравитации."""
+        """Применение лунной гравитации и обновление позиции."""
         # Слабая гравитация Луны
-        self.change_y -= 0.3
+        if not self.is_on_ground:
+            self.change_y -= 0.4
         
         # Ограничение скорости падения
-        if self.change_y < -10:
-            self.change_y = -10
+        if self.change_y < -12:
+            self.change_y = -12
             
         self.center_y += self.change_y
+        self.center_x += self.change_x
         
-        # Проверка приземления (будет реализована в Level)
-        if self.center_y < 64:
-            self.center_y = 64
-            self.change_y = 0
-            self.is_on_ground = True
+        # Горизонтальные границы уровня
+        if self.left < 0:
+            self.left = 0
+        elif self.right > 2000:
+            self.right = 2000
     
     def jump(self) -> None:
         """Выполнение прыжка при условии контакта с поверхностью."""

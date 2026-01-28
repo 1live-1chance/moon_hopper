@@ -8,7 +8,7 @@ class TextButton:
         center_x: int,
         center_y: int,
         text: str,
-        action: callable
+        action
     ):
         self.center_x = center_x
         self.center_y = center_y
@@ -53,4 +53,5 @@ class TextButton:
         """Проверка попадания по кнопке и выполнение действия."""
         if (self.center_x - self.width/2 < x < self.center_x + self.width/2 and
             self.center_y - self.height/2 < y < self.center_y + self.height/2):
-            self.action()
+            if self.action:
+                self.action()

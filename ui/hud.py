@@ -22,7 +22,7 @@ class HUD:
         arcade.draw_text(
             f"Время: {max(0, int(time_left))}",
             10,
-            540,
+            545,
             arcade.color.WHITE,
             18,
             font_name=self.font_name

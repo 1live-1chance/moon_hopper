@@ -12,8 +12,12 @@ class Crystal(arcade.Sprite):
         self.center_y = y
         self.collect_sound = arcade.load_sound(":resources:/sounds/coin5.wav")
         
-    def collect(self, particle_system: arcade.ParticleEmitter) -> None:
+    def collect(self, particle_system, x: float, y: float) -> None:
         """Сбор кристалла с визуальным эффектом."""
         arcade.play_sound(self.collect_sound)
-        # Эффект частиц будет запущен в Level
+        # Запуск частиц в точке кристалла
+        if particle_system:
+            particle_system.center_x = x
+            particle_system.center_y = y
+            particle_system.rate = 1.0
         self.remove_from_sprite_lists()
