@@ -21,7 +21,7 @@ class ScoreManager:
                 with open(self.filepath, "r", encoding="utf-8") as f:
                     data = json.load(f)
                     self.high_score = data.get("high_score", 0)
-        except (json.JSONDecodeError, IOError):
+        except (json.JSONDecodeError, IOError, FileNotFoundError):
             self.high_score = 0
         return self.high_score
     

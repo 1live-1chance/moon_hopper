@@ -1,5 +1,4 @@
 import arcade
-import random
 
 class Meteor(arcade.Sprite):
     """Опасный метеорит."""
