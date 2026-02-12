@@ -52,7 +52,7 @@ class GameWindow(arcade.Window):
         )
         self.restart_button = TextButton(
             center_x=self.width // 2,
-            center_y=self.height // 2,
+            center_y=self.height // 2 - 50,
             text="Заново",
             action=self.switch_to_game
         )
@@ -67,12 +67,13 @@ class GameWindow(arcade.Window):
         self.clear()
         
         if self.state == GameState.GAME:
-            self.camera.use()
+            # Игровая камера
+            self.camera.use_game_camera()
             self.level.draw()
             self.player.draw()
             
-            # Возврат к экранной камере для интерфейса
-            self.camera.gui_camera.use()
+            # Камера интерфейса
+            self.camera.use_gui_camera()
             self.hud.draw(self.score, self.time_left, self.score_manager.high_score)
             
         elif self.state == GameState.MENU:
@@ -82,7 +83,8 @@ class GameWindow(arcade.Window):
                 self.height // 2 + 100,
                 arcade.color.WHITE,
                 36,
-                anchor_x="center"
+                anchor_x="center",
+                font_name=":resources:/fonts/kenney_fonts/kenney_pixel.ttf"
             )
             self.start_button.draw()
             
@@ -93,7 +95,8 @@ class GameWindow(arcade.Window):
                 self.height // 2 + 50,
                 arcade.color.WHITE,
                 36,
-                anchor_x="center"
+                anchor_x="center",
+                font_name=":resources:/fonts/kenney_fonts/kenney_pixel.ttf"
             )
             arcade.draw_text(
                 f"Счёт: {self.score}",
@@ -101,7 +104,17 @@ class GameWindow(arcade.Window):
                 self.height // 2,
                 arcade.color.WHITE,
                 24,
-                anchor_x="center"
+                anchor_x="center",
+                font_name=":resources:/fonts/kenney_fonts/kenney_pixel.ttf"
+            )
+            arcade.draw_text(
+                f"Рекорд: {self.score_manager.high_score}",
+                self.width // 2,
+                self.height // 2 - 30,
+                arcade.color.YELLOW,
+                20,
+                anchor_x="center",
+                font_name=":resources:/fonts/kenney_fonts/kenney_pixel.ttf"
             )
             self.restart_button.draw()
     
@@ -128,7 +141,7 @@ class GameWindow(arcade.Window):
             self.player, self.level.crystals
         )
         for crystal in crystals_hit:
-            crystal.collect(self.level.particle_system)
+            crystal.collect(self.level.particle_system, crystal.center_x, crystal.center_y)
             self.score += 10
             
         # Проверка столкновения с метеоритами
@@ -145,6 +158,9 @@ class GameWindow(arcade.Window):
     
     def on_mouse_press(self, x: int, y: int, button: int, modifiers: int) -> None:
         """Обработка кликов мыши для кнопок."""
+        if button != arcade.MOUSE_BUTTON_LEFT:
+            return
+            
         if self.state == GameState.MENU and self.start_button:
             self.start_button.on_click(x, y)
         elif self.state == GameState.GAME_OVER and self.restart_button:
